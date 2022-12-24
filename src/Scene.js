@@ -2,18 +2,10 @@ import { Scroll, ScrollControls } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import React from 'react'
 import * as THREE from 'three'
-import { Html } from './Components/Html'
-import { Particles } from './Components/Particles'
 import { Cubes } from './Components/Cubes'
-import { Objects } from './Components/Objects'
 import { LayerMaterial, Depth } from 'lamina'
-import { Tetrahedrons } from './Components/Tetrahedons'
 
 function Scene() {
-  const material = new THREE.MeshBasicMaterial({
-    vertexColors: true,
-    color: '#FFFFFF'
-  })
   useFrame(({ mouse, camera }) => {
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, mouse.x * 0.5, 0.03)
     camera.position.y = THREE.MathUtils.lerp(camera.position.y, mouse.y * 0.8, 0.01)
@@ -25,13 +17,7 @@ function Scene() {
     <ScrollControls pages={8}>
       <Bg />
       <Scroll>
-        <Tetrahedrons material={material} />
-        <Particles />
         <Cubes count={50} />
-        <Objects material={material} />
-      </Scroll>
-      <Scroll html>
-        <Html />
       </Scroll>
     </ScrollControls>
   )

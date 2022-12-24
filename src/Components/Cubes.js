@@ -6,7 +6,9 @@ import { Instances, Instance, Float } from '@react-three/drei'
 import * as THREE from 'three'
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { useThree } from '@react-three/fiber'
+import { Html } from '@react-three/drei'
 import { LayerMaterial, Depth, Fresnel } from 'lamina/vanilla'
+import { Quote } from './Quote'
 
 const object = new THREE.Object3D()
 const colorA = new THREE.Color('#FFA500').convertSRGBToLinear()
@@ -61,7 +63,13 @@ function CubeInstance({ id, object, ...props }) {
     <group {...props}>
       <Float position={position} scale={scale} speed={speed} rotationIntensity={25} floatIntensity={25} dispose={null}>
         <Instance ref={ref} />
+        <Html>
+          <Quote symbol={'TSLA'} />
+        </Html>
       </Float>
+      {/* <Text color="black" anchorX="center" anchorY="middle"> */}
+
+      {/* </Text> */}
     </group>
   )
 }
