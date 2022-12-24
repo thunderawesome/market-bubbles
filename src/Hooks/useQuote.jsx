@@ -1,34 +1,34 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 
 function useQuote(symbol) {
-  const [quote, setQuote] = useState(null)
-  const [error, setError] = useState(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [symbolMap, setSymbolMap] = useState(null)
+  const [quote, setQuote] = useState(null);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [symbolMap, setSymbolMap] = useState({});
 
   useEffect(() => {
     async function fetchQuote() {
-      setIsLoading(true)
+      setIsLoading(true);
       try {
-        const response = await fetch('/mock/quotes.json')
-        const data = await response.json()
-        setSymbolMap(data)
+        const response = await fetch('/mock/quotes.json');
+        const data = await response.json();
+        setSymbolMap(data.quotes);
       } catch (error) {
-        setError(error)
+        setError(error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
     }
-    fetchQuote()
-  }, [symbol]) // added dependency on 'symbol'
+    fetchQuote();
+  }, []);
 
   useEffect(() => {
-    if (symbolMap) {
-      setQuote(symbolMap[symbol])
-    }
-  }, [symbolMap, symbol])
+    const quotes = Object.values(symbolMap);
+    const quoteForSymbol = quotes.find((q) => q.symbol === symbol);
+    setQuote(quoteForSymbol);
+  }, [symbolMap, symbol]);
 
-  return { quote, error, isLoading }
+  return { quote, error, isLoading };
 }
 
-export default useQuote
+export default useQuote;

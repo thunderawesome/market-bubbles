@@ -63,7 +63,13 @@ function CubeInstance({ id, object, ...props }) {
     <group {...props}>
       <Float position={position} scale={scale} speed={speed} rotationIntensity={25} floatIntensity={25} dispose={null}>
         <Instance ref={ref} />
-        <Html>
+        <Html
+          as="div"
+          center
+          style={{
+            transition: 'all 0.5s',
+            transform: `scale(.1)`
+          }}>
           <Quote symbol={'TSLA'} />
         </Html>
       </Float>

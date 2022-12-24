@@ -12,7 +12,16 @@ const Quote = React.memo(({ symbol }) => {
     return 'Error: ' + error.message
   }
 
-  return quote ? `Current price: ${quote.price}` : 'No quote available'
+  return quote ? (
+    <>
+      {quote.symbol}
+      <br />
+      <br />
+      {quote.price}
+    </>
+  ) : (
+    'No quote available'
+  )
 })
 
 export { Quote }
