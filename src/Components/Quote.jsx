@@ -1,5 +1,6 @@
 import useQuote from '../Hooks/useQuote'
 import React from 'react'
+import { Text } from '@react-three/drei'
 
 const Quote = React.memo(({ symbol }) => {
   const { quote, error, isLoading } = useQuote(symbol)
@@ -12,15 +13,12 @@ const Quote = React.memo(({ symbol }) => {
     return 'Error: ' + error.message
   }
 
-  return quote ? (
-    <>
-      {quote.symbol}
-      <br />
-      <br />
-      {quote.price}
-    </>
-  ) : (
-    'No quote available'
+  const innerText = quote ? symbol : 'No quote available'
+
+  return (
+    <Text fontSize={1} position={[0, 0, 1.25]} color="black">
+      {innerText}
+    </Text>
   )
 })
 

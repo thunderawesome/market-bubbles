@@ -4,8 +4,11 @@ import React from 'react'
 import * as THREE from 'three'
 import { Cubes } from './Components/Cubes'
 import { LayerMaterial, Depth } from 'lamina'
+import useQuote from './Hooks/useQuote'
 
-function Scene() {
+export default function Scene() {
+  const { count } = useQuote()
+
   useFrame(({ mouse, camera }) => {
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, mouse.x * 0.5, 0.03)
     camera.position.y = THREE.MathUtils.lerp(camera.position.y, mouse.y * 0.8, 0.01)
@@ -17,7 +20,7 @@ function Scene() {
     <ScrollControls pages={8}>
       <Bg />
       <Scroll>
-        <Cubes count={50} />
+        <Cubes count={count} />
       </Scroll>
     </ScrollControls>
   )
@@ -33,5 +36,3 @@ function Bg() {
     </mesh>
   )
 }
-
-export { Scene }
