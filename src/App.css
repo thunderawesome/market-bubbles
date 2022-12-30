@@ -29,7 +29,7 @@ a {
 }
 
 a {
-  pointer-events: all;
+  /* pointer-events: all; */
   color: white;
   text-decoration: none;
 }

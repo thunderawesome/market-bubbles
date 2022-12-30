@@ -17,7 +17,7 @@ export default function Scene() {
   })
 
   return (
-    <ScrollControls pages={8}>
+    <ScrollControls pages={2}>
       <Bg />
       <Scroll>
         <Cubes count={count} />

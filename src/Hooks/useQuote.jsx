@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 
 function useQuote(symbol) {
   const [quote, setQuote] = useState(null)
-  const [quotes, setQuotes] = useState(null)
   const [count, setCount] = useState(0)
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -25,20 +24,19 @@ function useQuote(symbol) {
   }, [])
 
   useEffect(() => {
-    const quotes = Object.values(symbolMap)
-    if (!symbol) {
-      setQuotes(quotes)
-      setCount(quotes.length)
-      return
+    if (!symbolMap) return
+    if (symbolMap.length > 0) {
+      setCount(symbolMap.length)
     }
 
     // For single quote using the Symbol as the key
-    setCount(quotes.length)
-    const quoteForSymbol = quotes.find((q) => q.symbol === symbol)
-    setQuote(quoteForSymbol)
+    if (symbol) {
+      const quoteForSymbol = symbolMap.find((q) => q.symbol === symbol)
+      setQuote(quoteForSymbol)
+    }
   }, [symbolMap, symbol])
 
-  return { quote, quotes, count, error, isLoading }
+  return { quote, symbolMap, count, error, isLoading }
 }
 
 export default useQuote
