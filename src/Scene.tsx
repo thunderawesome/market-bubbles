@@ -4,9 +4,17 @@ import * as THREE from 'three'
 import { Cubes } from './Components/Cubes'
 import { LayerMaterial, Depth } from 'lamina'
 import useQuote from './Hooks/useQuote'
+import Lines from './Components/Lines'
+import { useControls } from 'leva'
 
 export default function Scene() {
-  const { count } = useQuote('')
+  const { qCount } = useQuote('')
+
+  const { dash, count, radius } = useControls({
+    dash: { value: 0.99, min: 0, max: 0.99, step: 0.01 },
+    count: { value: 100, min: 0, max: 200, step: 1 },
+    radius: { value: 10, min: 1, max: 100, step: 1 }
+  })
 
   useFrame(({ mouse, camera }) => {
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, mouse.x * 0.5, 0.03)
@@ -16,11 +24,12 @@ export default function Scene() {
   })
 
   return (
-    <ScrollControls pages={2}>
+    <ScrollControls pages={1}>
       <Bg />
       <Scroll>
-        <Cubes count={count} />
+        <Cubes count={qCount} />
       </Scroll>
+      <Lines dash={dash} count={count} radius={radius} />
     </ScrollControls>
   )
 }

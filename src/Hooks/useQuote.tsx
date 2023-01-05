@@ -17,7 +17,7 @@ type Quotes = Array<Quote>
 
 function useQuote(symbol: string) {
   const [quote, setQuote] = useState<Quote>()
-  const [count, setCount] = useState(0)
+  const [qCount, setCount] = useState(0)
   const [error, setError] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [symbolMap, setSymbolMap] = useState<Quotes>()
@@ -51,7 +51,7 @@ function useQuote(symbol: string) {
     }
   }, [symbolMap, symbol])
 
-  return { quote, symbolMap, count, error, isLoading }
+  return { quote, symbolMap, qCount, error, isLoading }
 }
 
 export default useQuote

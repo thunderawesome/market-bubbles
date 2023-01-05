@@ -6,10 +6,21 @@ import { LayerMaterial, Depth, Fresnel } from 'lamina/vanilla'
 import { Quote } from './Quote'
 import { Object3D } from 'three'
 
-const objContainer = new THREE.Object3D()
+const tempObject = new THREE.Object3D()
+const tempColor = new THREE.Color()
+
 const colorA = new THREE.Color('#FFA500').convertSRGBToLinear()
 const colorB = new THREE.Color('#880000').convertSRGBToLinear()
+const colorC = new THREE.Color('#FF0000').convertSRGBToLinear()
+const colorD = new THREE.Color('#880000').convertSRGBToLinear()
+const colorE = new THREE.Color('#00FF00').convertSRGBToLinear()
+const colorF = new THREE.Color('#008800').convertSRGBToLinear()
 const fresnel = new THREE.Color('#ffffff').convertSRGBToLinear()
+
+const colors: Array<THREE.Color> = [colorA, colorB, colorC, colorD, colorE, colorF]
+
+const data = Array.from({ length: 1000 }, () => ({ color: colors[Math.floor(Math.random() * 6)], scale: 1 }))
+
 const material = new LayerMaterial({
   layers: [
     new Depth({
@@ -89,10 +100,16 @@ const CubeInstance = React.memo(({ ...props }: InstanceProps) => {
 
 function CubeInstances({ ...props }: InstancesProps) {
   const { count, objects } = props
+  const colorArray = useMemo(
+    () => Float32Array.from(new Array(1000).fill(tempColor).flatMap((_, i) => tempColor.set(data[i].color).toArray())),
+    []
+  )
   return (
     <group>
       <Instances range={count} material={material}>
-        <extrudeBufferGeometry />
+        <extrudeBufferGeometry>
+          <instancedBufferAttribute attach="attributes-color" args={[colorArray, 3]} />
+        </extrudeBufferGeometry>
         {objects.map((_, i) => (
           <CubeInstance key={i} id={i} />
         ))}
@@ -103,7 +120,13 @@ function CubeInstances({ ...props }: InstancesProps) {
 
 const Cubes = ({ ...props }: Props) => {
   const { count } = props
-  const objects: Object3D[] = useMemo(() => Array.from({ length: count }).map(() => objContainer), [count])
+  const objects: Object3D[] = useMemo(
+    () =>
+      Array.from({ length: count })
+        .fill(tempObject)
+        .map(() => tempObject),
+    [count]
+  )
   const [objs, setObjects] = useState<Object3D[]>([])
 
   useEffect(() => {
@@ -111,7 +134,7 @@ const Cubes = ({ ...props }: Props) => {
   }, [objects])
 
   return (
-    <group position={[0, 0, 0]}>
+    <group>
       <CubeInstances objects={objs} count={count} />
     </group>
   )
