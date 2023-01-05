@@ -1,9 +1,10 @@
 import { Instances, Instance, Float } from '@react-three/drei'
 import * as THREE from 'three'
 import React, { useState, useMemo, useRef, useEffect } from 'react'
-import { useThree } from '@react-three/fiber'
+import { useThree, Vector3 } from '@react-three/fiber'
 import { LayerMaterial, Depth, Fresnel } from 'lamina/vanilla'
 import { Quote } from './Quote'
+import { Object3D } from 'three'
 
 const objContainer = new THREE.Object3D()
 const colorA = new THREE.Color('#FFA500').convertSRGBToLinear()
@@ -39,23 +40,37 @@ const material = new LayerMaterial({
   ]
 })
 
-const CubeInstance = React.memo(({ id, object, ...props }) => {
+interface InstanceProps {
+  id: number
+}
+
+interface InstancesProps {
+  count: number
+  objects: Object3D[]
+}
+
+interface Props {
+  count: number
+}
+
+const CubeInstance = React.memo(({ ...props }: InstanceProps) => {
+  const { id } = props
   const ref = useRef()
   const { viewport, camera } = useThree()
   const [speed] = useState(() => 1 + Math.random() * 2.5)
-  const scale = useMemo(() => {
+  const scale: Vector3 = useMemo(() => {
     const s = Math.random() / 1.5
     return [s, s, s]
   }, [])
 
-  const position = useMemo(() => {
+  const position: Vector3 = useMemo(() => {
     const z = (Math.random() + 1) * -1
     const bounds = viewport.getCurrentViewport(camera, [0, 0, z])
     return [THREE.MathUtils.randFloatSpread(bounds.width * 0.75), THREE.MathUtils.randFloatSpread(bounds.height * 0.75), z]
   }, [viewport, camera])
 
   return (
-    <group {...props}>
+    <group>
       <Float
         position={position}
         scale={scale}
@@ -65,37 +80,39 @@ const CubeInstance = React.memo(({ id, object, ...props }) => {
         floatingRange={[-0.1, 0.1]} // Range of y-axis values the object will float within, defaults to [-0.1,0.1]
         dispose={null}>
         <Instance ref={ref}>
-          <Quote id={id} />
+          <Quote id={id} symbol={''} />
         </Instance>
       </Float>
     </group>
   )
 })
 
-function CubeInstances({ count, objects }) {
+function CubeInstances({ ...props }: InstancesProps) {
+  const { count, objects } = props
   return (
     <group>
       <Instances range={count} material={material}>
         <extrudeBufferGeometry />
-        {objects.map((obj, i) => (
-          <CubeInstance key={i} id={i} object={obj} />
+        {objects.map((_, i) => (
+          <CubeInstance key={i} id={i} />
         ))}
       </Instances>
     </group>
   )
 }
 
-const Cubes = ({ count = 100 }) => {
-  const objects = useMemo(() => Array.from({ length: count }).map(() => objContainer), [count])
-  const [trees, setTrees] = useState([])
+const Cubes = ({ ...props }: Props) => {
+  const { count } = props
+  const objects: Object3D[] = useMemo(() => Array.from({ length: count }).map(() => objContainer), [count])
+  const [objs, setObjects] = useState<Object3D[]>([])
 
   useEffect(() => {
-    setTrees(objects)
+    setObjects(objects)
   }, [objects])
 
   return (
     <group position={[0, 0, 0]}>
-      <CubeInstances objects={trees} count={count} />
+      <CubeInstances objects={objs} count={count} />
     </group>
   )
 }

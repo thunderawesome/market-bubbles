@@ -1,13 +1,12 @@
 import { Scroll, ScrollControls } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
-import React from 'react'
 import * as THREE from 'three'
 import { Cubes } from './Components/Cubes'
 import { LayerMaterial, Depth } from 'lamina'
 import useQuote from './Hooks/useQuote'
 
 export default function Scene() {
-  const { count } = useQuote()
+  const { count } = useQuote('')
 
   useFrame(({ mouse, camera }) => {
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, mouse.x * 0.5, 0.03)
